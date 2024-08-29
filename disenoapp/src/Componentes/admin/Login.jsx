@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './Login.css';
-import logo from '../Imagenes/Logo.jpg'; // Asegúrate de que la ruta sea correcta
-
-import user from '../Imagenes/Logo.jpg';
-import contraseña from '../Imagenes/Logo.jpg';
+import logo from './Imagenes/Logo.jpg' // Asegúrate de que la ruta sea correcta
+import user from './Imagenes/Logo.jpg';
+import contraseña from './Imagenes/Logo.jpg';
+import { BACKEND_API } from '../../constant';
 
 function Login() {
   const [usuario, setUsuario] = useState('');
