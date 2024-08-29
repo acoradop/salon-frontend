@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Login.css';
-import logo from './Imagenes/Logo.jpg'; // Asegúrate de que la ruta sea correcta
-import user from './Imagenes/Logo.jpg';
-import contraseña from './Imagenes/Logo.jpg';
+import logo from './Imagenes/Logocompleto.jpg'; // Asegúrate de que la ruta sea correcta
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -93,49 +91,50 @@ function Login() {
   return (
     <div className="background">
       <div className="login-container">
-        <div className="logo-container">
+      <div className="logo-container2">
+      <div className="logo-container">
           <img src={logo} alt="Logo" className="logo" />
         </div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <form onSubmit={handleSubmit}>
-          <div className="input-container">
-            <label htmlFor="usuario" className="input-label">
-              <img src={user} alt="Usuario" />
-            </label>
-            <input
-              type="text"
-              id="usuario"
-              name="usuario"
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
-              required
-              className="input-field"
-              placeholder="Ingrese su usuario"
-            />
-          </div>
-          <div className="input-container">
-            <label htmlFor="password" className="input-label">
-              <img src={contraseña} alt="Contraseña" />
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="contrasena"
-              value={contrasena}
-              onChange={(e) => setContrasena(e.target.value)}
-              required
-              className="input-field"
-              placeholder="Ingrese su contraseña"
-            />
-          </div>
-          <br />
-          <button type="submit">Ingresar</button>
-        </form>
+        </div>
+        <br></br>
+        <br></br>
+        <div className='alinear'>
+          <h1>INICIA SESIÓN</h1>
+          <p>para continuar</p>
+          <form onSubmit={handleSubmit}>
+            <div className='input-container'>
+              <label htmlFor="usuario" className='input-label'> 
+              </label>
+              <input
+                type="text"
+                id="usuario"
+                value={usuario}
+                onChange={(e) => setUsuario(e.target.value)}
+                required
+                className="input-field"
+                placeholder="Usuario"
+              />    
+            </div>
+            <div className='input-container'>
+              <label htmlFor="password" className='input-label'>
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={contrasena}
+                onChange={(e) => setContrasena(e.target.value)}
+                required
+                className="input-field"
+                placeholder="Contraseña"
+              />
+            </div>
+            <button type="submit">INGRESAR</button>
+          </form>
+            
+        </div>
+        <ToastContainer />
+        
       </div>
-      <ToastContainer />
     </div>
   );
 }
