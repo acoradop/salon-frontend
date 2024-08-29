@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import Login from './Componentes/admin/Login';
-import Cliente from './Componentes/cliente/cliente';
+import React, { useState } from "react";
+import Login from "./Componentes/admin/Login";
+import Cliente from "./Componentes/cliente/cliente";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
@@ -12,13 +12,13 @@ function App() {
 
   return (
     <Router>
-    <div>
-      <Routes>
-      <Route path="/" element={<Login/>}/>
-      <Route path="/login" element={<Login/>}/>
-      <Route path="/clientes" element={<Cliente/>}/>
-      </Routes>
-    </div>
+      <div>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/clientes" element={<Cliente />} />
+        </Routes>
+      </div>
     </Router>
   );
 }
