@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
-import logo from '../Imagenes/Logo.jpg'; // Asegúrate de que la ruta sea correcta
+import logo from '../Imagenes/Logocompleto.jpg'; // Asegúrate de que la ruta sea correcta
 
-import user from '../Imagenes/Logo.jpg';
-import contraseña from '../Imagenes/Logo.jpg';
 
 function Login() {
   const [usuario, setUsuario] = useState('');
@@ -23,45 +21,48 @@ function Login() {
   return (
     <div className="background">
       <div className="login-container">
-        <div className="logo-container">
+      <div className="logo-container2">
+      <div className="logo-container">
           <img src={logo} alt="Logo" className="logo" />
         </div>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <form onSubmit={handleLogin}>
-        <div className='input-container'>
-          <label htmlFor="usuario" className='input-label'> 
-            <img src={user} alt="Logo" />
-          </label>
-          <input
-            type="text"
-            id="usuario"
-            value={usuario}
-            onChange={(e) => setUsuario(e.target.value)}
-            required
-            className="input-field"
-            placeholder="Ingrese su usuario"
-          />    
-        </div>
-        <div className='input-container'>
-            <label htmlFor="password" className='input-label'>
-            <img src={contraseña} alt="Logo" />
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="input-field"
-              placeholder="Ingrese su contraseña"
-            />
         </div>
         <br></br>
-        <button type="submit">Ingresar</button>
-        </form>
+        <br></br>
+        <div className='alinear'>
+          <h1>INICIA SESIÓN</h1>
+          <p>para continuar</p>
+          <form onSubmit={handleLogin}>
+            <div className='input-container'>
+              <label htmlFor="usuario" className='input-label'> 
+              </label>
+              <input
+                type="text"
+                id="usuario"
+                value={usuario}
+                onChange={(e) => setUsuario(e.target.value)}
+                required
+                className="input-field"
+                placeholder="Usuario"
+              />    
+            </div>
+            <div className='input-container'>
+              <label htmlFor="password" className='input-label'>
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="input-field"
+                placeholder="Contraseña"
+              />
+            </div>
+            <button type="submit">INGRESAR</button>
+          </form>
+            
+        </div>
+        
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       </div>
     </div>
