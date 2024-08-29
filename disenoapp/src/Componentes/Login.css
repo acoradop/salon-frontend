@@ -1,0 +1,142 @@
+
+/* Estilos generales */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FBF9F1; /* Fondo general del body */
+  }
+  
+  /* Fondo entre body y div */
+  .background {
+    width:  886px;
+    height: 487px;
+    background: #FBF9F1; /* Fondo semitransparente */
+    z-index: 1;
+  }
+  
+  /* Contenedor del formulario de login */
+  .login-container {
+    position: relative;
+    width:  886px;
+    height: 487px;
+    padding: 40px 20px 20px; /* Espacio adicional en la parte superior para la esfera */
+    background-color: #AFD3E2;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    text-align: center;
+  }
+  
+  /* Contenedor del logo en forma de esfera */
+  .logo-container {
+    position: absolute;
+    top: -75px; /* Mueve la esfera hacia arriba, fuera del contenedor */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #F6F1F1;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 3; /* Asegura que la esfera esté por encima del contenedor */
+  }
+  
+  /* Imagen del logo */
+  .logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Estilos para el formulario */
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  form div {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    margin-right: 10px;
+  }
+  
+  input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 20px 30px;
+    border: none;
+    border-radius: 25px;
+    background-color: #0056b3;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #201658;
+  }
+  
+  /* Mensaje de error */
+  p {
+    margin-top: 10px;
+  }
+  
+/*LO DE LOS LABLE DE INGRESO*/
+
+/* Estilos generales del contenedor del input */
+.input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px; /* Espacio entre contenedores, ajusta según necesites */
+  }
+  
+  /* Estilos para la etiqueta (label) */
+  .input-label {
+    display: flex; /* Para asegurar que la imagen y el texto estén en línea */
+    align-items: center; /* Centra verticalmente el contenido de la etiqueta */
+    margin-right: 1px; /* Espacio entre el icono/imagen y el input */
+  }
+
+  /* Estilos para la imagen */
+  .input-label img {
+    width: 30px; /* Ancho de la imagen, ajusta según el tamaño del icono/imagen */
+    height: 30px; /* Altura de la imagen, ajusta según el tamaño del icono/imagen */
+    background-color: #0B60B0; /* Color de fondo de la imagen */
+    padding: 4px; /* Espaciado interno para que el fondo se note */
+  }
+  
+  /* Estilos para el campo de input */
+  .input-field {
+    background-color:#40A2D8 ;
+    flex: 1; /* Ocupa el espacio restante en el contenedor */
+    padding: 8px; /* Espaciado interno del input, ajusta según tu diseño */
+    border: 1px solid #ccc; /* Borde del input */
+    border-radius: 2px; /* Bordes redondeados */
+    font-size: 20px; /* Tamaño de fuente */
+    color: white;
+  }
+  
+  /* Estilos para el placeholder del input */
+  .input-field::placeholder {
+    color: #FFFFFF80; /* Color del placeholder */
+  }
+  
+  /* Estilos para el input cuando está enfocado */
+  .input-field:focus {
+    outline: none; /* Quita el borde de enfoque predeterminado */
+    border-color: #007bff; /* Cambia el color del borde al enfocarse */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra al enfocarse */
+  }
+  
