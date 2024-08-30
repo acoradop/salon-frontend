@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Login from "./Componentes/admin/Login";
 import Cliente from "./Componentes/cliente/cliente";
+import Calendario from "./Componentes/calendario/calendario";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/clientes" element={<Cliente />} />
+          <Route path="/calendario" element={<Calendario />} />
         </Routes>
       </div>
     </Router>
