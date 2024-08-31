@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import './Login.css';
-import logo from './Imagenes/Logocompleto.jpg'; // Asegúrate de que la ruta sea correcta
+import logo from './Imagenes/Logocompleto.jpg'; 
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { BACKEND_API } from '../../constant';
 
-function Login() {
+function Login({ onLoginSuccess }) {
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
-
   const navigate = useNavigate();
 
   useEffect(() => {
     const userAdmin = localStorage.getItem('SalonAdmin');
     if (userAdmin) {
-      navigate('/clientes');
+      navigate('/citas');
     }
   }, [navigate]);
 
@@ -37,41 +36,36 @@ function Login() {
         }
       );
 
-      if (response && response.data) {
-        if (response.data.success) {
-          const nombreUsuario = response.data.nombre || 'Anónimo';
+      if (response && response.data && response.data.success) {
+        const nombreUsuario = response.data.nombre || 'Anónimo';
+        localStorage.setItem('SalonAdmin', nombreUsuario);
 
-          localStorage.setItem('SalonAdmin', nombreUsuario);
+        toast.success(`Inicio de sesión exitoso. Bienvenido, ${nombreUsuario}!`, {
+          position: 'bottom-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: 'dark',
+        });
 
-          toast.success(`Inicio de sesión exitoso. Bienvenido, ${nombreUsuario}!`, {
-            position: 'bottom-center',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: 'dark',
-          });
-
-          navigate('/clientes');
-        } else {
-          toast.error('Usuario o contraseña incorrectos', {
-            position: 'bottom-center',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: 'dark',
-          });
-        }
+        onLoginSuccess();  // Marca al usuario como autenticado
+        navigate('/citas');
       } else {
-        console.error('Respuesta no válida:', response);
+        toast.error('Usuario o contraseña incorrectos', {
+          position: 'bottom-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: 'dark',
+        });
       }
     } catch (error) {
-      console.error('Error al enviar la solicitud', error);
       toast.error('Usuario o contraseña incorrectos', {
         position: 'bottom-center',
         autoClose: 3000,
@@ -128,7 +122,7 @@ function Login() {
                 placeholder="Contraseña"
               />
             </div>
-            <button type="submit">INGRESAR</button>
+            <button type="submit" className="button-login">INGRESAR</button>
           </form>
             
         </div>

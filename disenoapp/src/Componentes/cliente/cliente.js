@@ -136,7 +136,7 @@ const Registro = () => {
           onChange={(e) => setTelefono(e.target.value)}
         />
         {errorCliente && <span className="error" style={{ color: "red" }}>{errorCliente}</span>}
-        <button type="submit" onClick={handleSubmit}>Guardar Cliente</button>
+        <button type="submit" onClick={handleSubmit} className="button-client">Guardar Cliente</button>
       </div>
 
       <ToastContainer
@@ -170,8 +170,8 @@ const Registro = () => {
                 <td>{cliente.apellido_cliente}</td>
                 <td>{cliente.telefono_cliente}</td>
                 <td>
-                  <button onClick={() => handleEliminarCliente(cliente.id_cliente)}>Eliminar</button>
-                  <button>Modificar</button>
+                  <button className="button-client" onClick={() => handleEliminarCliente(cliente.id_cliente)}>Eliminar</button>
+                  <button className="button-client">Modificar</button>
                 </td>
               </tr>
             ))}

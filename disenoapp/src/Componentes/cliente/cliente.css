@@ -41,7 +41,7 @@
     
   }
   
-  button {
+  .button-client {
     background-color: #FFA8C6;
     color: #fff;
     padding: 12px;
@@ -52,7 +52,7 @@
     margin-top: 10px;
   }
   
-  button:hover {
+  .button-client:hover {
     background-color: #ff5890;
   }
 
