@@ -1,27 +1,41 @@
 import React, { useState } from "react";
+import { ChakraProvider } from '@chakra-ui/react';
+import { Route, Routes, useLocation, Navigate } from "react-router-dom";
+import Nav from "./Componentes/nav/nav";
 import Login from "./Componentes/admin/Login";
 import Cliente from "./Componentes/cliente/cliente";
 import Calendario from "./Componentes/calendario/calendario";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Citas from "./Componentes/citas/citas";
+import Servicios from "./Componentes/servicios/servicios";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const location = useLocation();
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
   };
 
+  const showNav = isAuthenticated && location.pathname !== '/login' && location.pathname !== '/';
+
   return (
-    <Router>
-      <div>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/clientes" element={<Cliente />} />
-          <Route path="/calendario" element={<Calendario />} />
-        </Routes>
-      </div>
-    </Router>
+    <ChakraProvider>
+      {showNav && <Nav />}
+      <Routes>
+        <Route path="/" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+        <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+        {isAuthenticated ? (
+          <>
+            <Route path="/clientes" element={<Cliente />} />
+            <Route path="/calendario" element={<Calendario />} />
+            <Route path="/citas" element={<Citas />} />
+            <Route path="/servicios" element={<Servicios />} />
+          </>
+        ) : (
+          <Route path="*" element={<Navigate to="/login" />} />
+        )}
+      </Routes>
+    </ChakraProvider>
   );
 }
 

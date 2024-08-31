@@ -142,7 +142,7 @@ form {
 }
 
 /* Estilos para el botón */
-button {
+.button-login {
     padding: 10px 30px;
     border: none;
     border-radius: 25px;
@@ -153,7 +153,6 @@ button {
     margin-top: 20px; /* Espacio superior para separar del contenido */
     align-self: center; /* Asegura que el botón esté centrado dentro del contenedor */
 }
-
-button:hover {
+.button-login:hover {
     background-color: #D83870;
 }
