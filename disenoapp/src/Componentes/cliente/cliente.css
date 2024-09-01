@@ -8,6 +8,7 @@
     font-family: "Inika", Helvetica;
     font-size: 20px;
     max-width: 100%;
+    background-color: #fff;
   }
 
   .form-group {
@@ -107,4 +108,51 @@
     width: 20%;
   }
 
+  .Modificar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    width: ;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
   
+  }
+  
+  .Modificar-content {
+    background-color: #FFC5CC;
+    padding: 20px;
+    border-radius: 8px;
+    border-color: black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
+    width: 320px;
+    text-align: center;
+    color: #FF6996;
+  }
+  .Modificar-content h3, input{
+    color: black;
+  }
+
+  .Modificar input{
+    width: 100%;
+    padding: 9px;
+    margin-top: 0px;
+    border: 1px solid #DFC432;
+    border-width: 2px;
+    border-radius: 6px;
+    box-sizing: border-box;
+    margin-right: 20px;
+    margin-right: 10px;
+    margin-bottom: 2px;
+  }
+  
+  .register-container h2{
+    color: #765D00;
+    font-size: 25px;
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+  }

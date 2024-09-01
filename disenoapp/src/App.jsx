@@ -9,11 +9,14 @@ import Citas from "./Componentes/citas/citas";
 import Servicios from "./Componentes/servicios/servicios";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem("SalonAdmin") === "true";
+  });
   const location = useLocation();
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
+    localStorage.setItem("SalonAdmin", "true");
   };
 
   const showNav = isAuthenticated && location.pathname !== '/login' && location.pathname !== '/';

@@ -38,7 +38,7 @@ function Login({ onLoginSuccess }) {
 
       if (response && response.data && response.data.success) {
         const nombreUsuario = response.data.nombre || 'Anónimo';
-        localStorage.setItem('SalonAdmin', nombreUsuario);
+        localStorage.setItem('SalonAdmin', 'true');
 
         toast.success(`Inicio de sesión exitoso. Bienvenido, ${nombreUsuario}!`, {
           position: 'bottom-center',

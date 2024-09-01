@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './cliente.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,7 +11,9 @@ const Registro = () => {
   const [telefono_cliente, setTelefono] = useState("");
   const [errorCliente, setErrorCliente] = useState("");
   const [clientes, setClientes] = useState([]);
-  
+  const [showMod, setshowMod] = useState(false);
+  const [clienteModificar, setClienteModificar] = useState(null);
+
   useEffect(() => {
     const fetchClientes = async () => {
       try {
@@ -24,7 +26,6 @@ const Registro = () => {
 
     fetchClientes();
   }, []);
-  
 
   const handleEliminarCliente = async (id) => {
     try {
@@ -41,8 +42,7 @@ const Registro = () => {
       });
       setTimeout(() => {
         window.location.reload();
-    }, 800);
-      
+      }, 800);
     } catch (error) {
       console.error("Error al eliminar el Cliente:", error);
     }
@@ -77,10 +77,52 @@ const Registro = () => {
       });
       setTimeout(() => {
         window.location.reload();
-    }, 500);
+      }, 500);
     } catch (error) {
       console.error('Error al registrar el cliente:', error);
       toast.error('¡Error al registrar el cliente!', {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+
+  const handleModificar = (cliente) => {
+    setClienteModificar(cliente);
+    setshowMod(true);
+  };
+
+  const handleCloseModificar = () => {
+    setshowMod(false);
+    setClienteModificar(null);
+  };
+
+  const handleModificarCliente = async () => {
+    try {
+      await axios.put(`${BACKEND_API}api/actualizar-cliente/${clienteModificar.id_cliente}`, clienteModificar);
+      toast.success('¡Cliente modificado exitosamente!', {
+        position: "bottom-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "dark",
+      });
+      setshowMod(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 800);
+    } catch (error) {
+      console.error("Error al modificar el cliente:", error);
+      toast.error('¡Error al modificar el cliente!', {
         position: "bottom-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -124,7 +166,6 @@ const Registro = () => {
         </div>
       </div>
 
-      
       <div className="form-group-full">
         <label className="label" htmlFor="telefono">Teléfono:</label>
         <input
@@ -139,19 +180,8 @@ const Registro = () => {
         <button type="submit" onClick={handleSubmit} className="button-client">Guardar Cliente</button>
       </div>
 
-      <ToastContainer
-        position="bottom-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover={false}
-        theme="light"
-      />
-      
+      <ToastContainer />
+
       <div className="cliente-tabla">
         <h2>Clientes Actuales</h2>
         <table>
@@ -171,13 +201,44 @@ const Registro = () => {
                 <td>{cliente.telefono_cliente}</td>
                 <td>
                   <button className="button-client" onClick={() => handleEliminarCliente(cliente.id_cliente)}>Eliminar</button>
-                  <button className="button-client">Modificar</button>
+                  <button className="button-client" onClick={() => handleModificar(cliente)}>Modificar</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {showMod && (
+        <div className="Modificar">
+          <div className="Modificar-content">
+            <h3>Modificar Cliente</h3>
+            Nombre
+            <input
+              type="text"
+              value={clienteModificar.nombre_cliente}
+              onChange={(e) => setClienteModificar({ ...clienteModificar, nombre_cliente: e.target.value })}
+              placeholder="Nombre"
+            />
+            Apellido
+            <input
+              type="text"
+              value={clienteModificar.apellido_cliente}
+              onChange={(e) => setClienteModificar({ ...clienteModificar, apellido_cliente: e.target.value })}
+              placeholder="Apellido"
+            />
+            Telefono
+            <input
+              type="text"
+              value={clienteModificar.telefono_cliente}
+              onChange={(e) => setClienteModificar({ ...clienteModificar, telefono_cliente: e.target.value })}
+              placeholder="Teléfono"
+            />
+            <button onClick={handleModificarCliente} className="button-client">Guardar Cambios</button>
+            <button onClick={handleCloseModificar} className="button-client">Cancelar</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
