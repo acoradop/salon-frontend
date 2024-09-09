@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { BACKEND_API } from '../../constant';
 
-const servicios = () => {
+const serviciosl = () => {
     const [nombre_servicio, setNombre_ser] = useState("");
   const [costo_servicio, setcosto] = useState("");
   const [duracion_servicio, setduracion] = useState("");
@@ -15,16 +15,16 @@ const servicios = () => {
   const [servicioModificar, setservicioModificar] = useState(null);
 
   useEffect(() => {
-    const fetchClientes = async () => {
+    const fetchServicios = async () => {
       try {
         const response = await axios.get(`${BACKEND_API}api/servicio`);
-        setClientes(response.data);
+        setServicio(response.data);
       } catch (error) {
         console.error("Error al obtener los servicios:", error);
       }
     };
 
-    fetchClientes();
+    fetchServicios();
   }, []);
 
   const handleEliminarServicio = async (id) => {
@@ -94,7 +94,7 @@ const servicios = () => {
   };
 
   const handleModificar = (servicio) => {
-    setClienteModificar(servicio);
+    setservicioModificar(servicio);
     setshowMod(true);
   };
 
@@ -105,7 +105,7 @@ const servicios = () => {
 
   const handleModificarServicio = async () => {
     try {
-      await axios.put(`${BACKEND_API}api/actualizar-Servicio/${servicioModificar.id_servicio}`, servicioModificar);
+      await axios.put(`${BACKEND_API}api/servicio/${servicioModificar.id_servicio}`, servicioModificar);
       toast.success('¡Servicio modificado exitosamente!', {
         position: "bottom-center",
         autoClose: 1000,
@@ -179,7 +179,7 @@ const servicios = () => {
               name="costo_servicio"
               onChange={(e) => setcosto(e.target.value)}
             />
-            {errorCliente && <span className="error" style={{ color: "red" }}>{errorservicio}</span>}
+            {errorservicio && <span className="error" style={{ color: "red" }}>{errorservicio}</span>}
             <button type="submit" onClick={handleSubmit} className="button-client">Guardar Servicio</button>
           </div>
     
@@ -199,11 +199,11 @@ const servicios = () => {
               <tbody>
                 {servicios.map((servicio, index) => (
                   <tr key={index}>
-                    <td>{servicios.nombre_servicio}</td>
-                    <td>{servicios.duracion_servicio}</td>
-                    <td>{servicios.costo_servicio}</td>
+                    <td>{servicio.nombre_servicio}</td>
+                    <td>{servicio.duracion_servicio}</td>
+                    <td>{servicio.costo_servicio}</td>
                     <td>
-                      <button className="button-client" onClick={() => handleEliminarCliente(servicios.id_)}>Eliminar</button>
+                      <button className="button-client" onClick={() => handleEliminarServicio(servicios.id_servicio)}>Eliminar</button>
                       <button className="button-client" onClick={() => handleModificar(servicios)}>Modificar</button>
                     </td>
                   </tr>
@@ -220,21 +220,21 @@ const servicios = () => {
                 <input
                   type="text"
                   value={servicioModificar.nombre_servicio}
-                  onChange={(e) => setClienteModificar({ ...servicioModificar, nombre_servicio: e.target.value })}
+                  onChange={(e) => setservicioModificar({ ...servicioModificar, nombre_servicio: e.target.value })}
                   placeholder="Nombre_ser"
                 />
                 Duración
                 <input
                   type="text"
                   value={servicioModificar.duracion_servicio}
-                  onChange={(e) => setClienteModificar({ ...servicioModificar, duracion_servicio: e.target.value })}
+                  onChange={(e) => setservicioModificar({ ...servicioModificar, duracion_servicio: e.target.value })}
                   placeholder="duracion"
                 />
                 Costo
                 <input
                   type="text"
                   value={servicioModificar.costo_servicio}
-                  onChange={(e) => setClienteModificar({ ...servicioModificar, costo_servicio: e.target.value })}
+                  onChange={(e) => setservicioModificar({ ...servicioModificar, costo_servicio: e.target.value })}
                   placeholder="costo"
                 />
                 <button onClick={handleModificarServicio} className="button-client">Guardar Cambios</button>
@@ -246,4 +246,4 @@ const servicios = () => {
       );
 };
 
-export default servicios;
+export default serviciosl;
