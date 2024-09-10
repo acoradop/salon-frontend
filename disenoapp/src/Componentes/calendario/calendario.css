@@ -1,0 +1,22 @@
+.rbc-month-view .rbc-month-row {
+    border-bottom: 5px solid #DFC432; 
+  }
+  
+  .rbc-month-view .rbc-day-bg {
+    border-right: 5px solid #DFC432;
+    border-left: 5px solid #DFC432;
+    border-top: 5px solid #DFC432;
+  }
+  
+  .rbc-month-view .rbc-time-slot {
+    border-bottom: 5px solid #DFC432; 
+  }
+  
+  .rbc-month-view .rbc-header {
+    border-bottom: 5px solid #DFC432;
+    border-right: 5px solid #DFC432;
+    border-left: 5px solid #DFC432;
+    border-top: 5px solid #DFC432;
+  }
+
+
