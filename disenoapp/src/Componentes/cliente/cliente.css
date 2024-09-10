@@ -47,7 +47,7 @@
     color: #fff;
     padding: 12px;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s;
     margin-top: 10px;
@@ -59,7 +59,7 @@
 
   .cliente-tabla{
     margin-top: 20px;
-    font-size: 20px;
+    font-size: 15px;
   }
   
   .cliente-tabla table {
