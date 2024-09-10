@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import './servicios.css';  // Asegúrate de enlazar el archivo CSS que te proporcioné
+import React, { useState, useEffect } from 'react';
+import './servicios.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import axios from 'axios';
+import { BACKEND_API } from '../../constant';
 const Servicios = () => {
   const [nombre_servicio, setNombre_ser] = useState("");
   const [costo_servicio, setcosto] = useState("");
@@ -13,38 +14,90 @@ const Servicios = () => {
   const [servicioModificar, setservicioModificar] = useState(null);
   const [selectedOption, setSelectedOption] = useState("");
 
-  const handleChange = (e) => {
-    setSelectedOption(e.target.value);
-    setduracion(e.target.value); // Actualiza el estado de la duración con la selección
-  };
-
-  const handleSubmit = () => {
-    if (!nombre_servicio || !costo_servicio || !duracion_servicio) {
-      setErrorServicio("Todos los campos son obligatorios");
-      return;
-    }
-    // Resetea el mensaje de error si todos los campos están completos
-    setErrorServicio("");
-    
-    const nuevoServicio = {
-      nombre_servicio,
-      costo_servicio,
-      duracion_servicio,
+  useEffect(() => {
+    const fetchServicio = async () => {
+      try {
+        const response = await axios.get(`${BACKEND_API}api/servicios`);
+        setServicio(response.data);
+      } catch (error) {
+        console.error("Error al obtener los servicios:", error);
+      }
     };
 
-    setServicio([...servicios, nuevoServicio]); // Agrega el nuevo servicio a la lista
-    toast.success("Servicio guardado exitosamente");
+    fetchServicio();
+  }, []);
 
-    // Limpia los campos después de guardar
-    setNombre_ser("");
-    setcosto("");
-    setduracion("");
-    setSelectedOption("");
+  const handleChange = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedOption(selectedValue);
+    setduracion(selectedValue);  // Actualiza duracion_servicio con el valor seleccionado
   };
 
-  const handleEliminarServicio = (id_servicio) => {
-    setServicio(servicios.filter(servicio => servicio.id_servicio !== id_servicio));
-    toast.info("Servicio eliminado");
+
+  const handleEliminarServicio = async (id) => {
+    try {
+      await axios.delete(`${BACKEND_API}api/servicio/${id}`);
+      toast.success('¡Servicio eliminado exitosamente!', {
+        position: "bottom-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "dark",
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 800);
+    } catch (error) {
+      console.error("Error al eliminar el servicio:", error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (errorservicio) {
+      toast.error(errorservicio, {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "dark",
+      });
+      return;
+    }
+    try {
+      await axios.post(`${BACKEND_API}api/servicio`, { nombre_servicio, duracion_servicio, costo_servicio });
+      toast.success('¡Servicio registrado exitosamente!', {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "dark",
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    } catch (error) {
+      console.error('Error al registrar el servicio:', error);
+      toast.error('¡Error al registrar el servicio!', {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
   };
 
   const handleModificar = (servicio) => {
@@ -52,16 +105,43 @@ const Servicios = () => {
     setshowMod(true);
   };
 
-  const handleModificarServicio = () => {
-    // Lógica para modificar el servicio
-    setServicio(servicios.map(servicio => servicio.id_servicio === servicioModificar.id_servicio ? servicioModificar : servicio));
-    setshowMod(false);
-    toast.success("Servicio modificado");
-  };
-
   const handleCloseModificar = () => {
     setshowMod(false);
+    setservicioModificar(null);
   };
+
+  const handleModificarServicio = async () => {
+    try {
+      await axios.put(`${BACKEND_API}api/servicio/${servicioModificar.id_servicio}`, servicioModificar);
+      toast.success('¡servicio modificado exitosamente!', {
+        position: "bottom-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "dark",
+      });
+      setshowMod(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 800);
+    } catch (error) {
+      console.error("Error al modificar el servicio:", error);
+      toast.error('¡Error al modificar el servicio!', {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+  
 
   return (
     <div className='register-container'>
@@ -85,10 +165,10 @@ const Servicios = () => {
           <label className="label" htmlFor="duracion">Duración:</label>
           <select id="services" value={selectedOption} onChange={handleChange}>
             <option value="">--Selecciona una opción--</option>
-            <option value="1 hora">1 Hora</option>
-            <option value="2 hora">2 Hora</option>
-            <option value="3 hora">3 Hora</option>
-            <option value="4 hora">4 Hora</option>
+            <option value="60">1 Hora</option>
+            <option value="120">2 Hora</option>
+            <option value="180">3 Hora</option>
+            <option value="240">4 Hora</option>
           </select>
         </div>
       </div>
