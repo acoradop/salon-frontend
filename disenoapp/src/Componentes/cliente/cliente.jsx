@@ -137,7 +137,8 @@ const Registro = () => {
 
   return (
     <div className='register-container'>
-      <h2>Registro de Clientes</h2>
+      <h2>Clientes</h2>
+      <br></br><br></br>
       <div className="form-row">
         <div className="form-group">
           <label className="label" htmlFor="nombre">Nombre:</label>
@@ -168,6 +169,7 @@ const Registro = () => {
 
       <div className="form-group-full">
         <label className="label" htmlFor="telefono">Teléfono:</label>
+        <div className="input-button-group">
         <input
           type="text"
           id="telefono"
@@ -178,12 +180,12 @@ const Registro = () => {
         />
         {errorCliente && <span className="error" style={{ color: "red" }}>{errorCliente}</span>}
         <button type="submit" onClick={handleSubmit} className="button-client">Guardar Cliente</button>
+        </div>
       </div>
 
       <ToastContainer />
 
       <div className="cliente-tabla">
-        <h2>Clientes Actuales</h2>
         <table>
           <thead>
             <tr>
