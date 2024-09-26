@@ -275,7 +275,6 @@ const Calendario = () => {
           isClosable: true,
         });
         setTimeout(() => {
-          window.location.reload();
         }, 1200);
       } 
       
@@ -322,62 +321,57 @@ const Calendario = () => {
 
       {isOpen && (
         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Agendar Cita</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Select
-                placeholder="Seleccione Cliente"
-                onChange={(e) => setSelectedCliente(e.target.value)}
-              >
-                {clientes.map((cliente) => (
-                  <option key={cliente.id_cliente} value={cliente.id_cliente}>
-                    {cliente.nombre_cliente} {cliente.apellido_cliente}
-                  </option>
-                ))}
-              </Select>
-
-              <Select
-                placeholder="Seleccione Servicio"
-                onChange={(e) => setSelectedServicio(e.target.value)}
-                mt={4}
-              >
-                {servicios.map((servicio) => (
-                  <option
-                    key={servicio.id_servicio}
-                    value={servicio.id_servicio}
-                  >
-                    {servicio.nombre_servicio} - {servicio.duracion_servicio} minutos
-                  </option>
-                ))}
-              </Select>
-
-              {!isTimeSelected && (
-                <Select
-                  placeholder="Seleccione Hora"
-                  onChange={handleSelectTime}
-                  mt={4}
-                >
-                  {timeOptions.map((time) => (
-                    <option key={time} value={time}>
-                      {time}
-                    </option>
-                  ))}
-                </Select>
-              )}
-            </ModalBody>
-
-            <ModalFooter>
-              <Button colorScheme="blue" onClick={handleCreateCita}>
-                Guardar Cita
-              </Button>
-              <Button variant="ghost" onClick={() => setIsOpen(false)}>
-                Cancelar
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Agendar Cita</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Select
+              placeholder="Seleccione Cliente"
+              onChange={(e) => setSelectedCliente(e.target.value)}
+            >
+              {clientes.map((cliente) => (
+                <option key={cliente.id_cliente} value={cliente.id_cliente}>
+                  {cliente.nombre_cliente} {cliente.apellido_cliente}
+                </option>
+              ))}
+            </Select>
+      
+            <Select
+              placeholder="Seleccione Servicio"
+              onChange={(e) => setSelectedServicio(e.target.value)}
+              mt={4}
+            >
+              {servicios.map((servicio) => (
+                <option key={servicio.id_servicio} value={servicio.id_servicio}>
+                  {servicio.nombre_servicio} - {servicio.duracion_servicio} minutos
+                </option>
+              ))}
+            </Select>
+      
+            <Select
+              placeholder="Seleccione Hora"
+              onChange={handleSelectTime}
+              mt={4}
+            >
+              {timeOptions.map((time) => (
+                <option key={time} value={time}>
+                  {time}
+                </option>
+              ))}
+            </Select>
+          </ModalBody>
+      
+          <ModalFooter>
+            <Button colorScheme="blue" onClick={handleCreateCita}>
+              Guardar Cita
+            </Button>
+            <Button variant="ghost" onClick={() => setIsOpen(false)}>
+              Cancelar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       )}
 
       {isEventModalOpen && selectedEvent && (
@@ -505,10 +499,7 @@ const Calendario = () => {
     </ModalContent>
   </Modal>
 )}
-
-
-
-    </div>
+</div>
   );
 };
 
