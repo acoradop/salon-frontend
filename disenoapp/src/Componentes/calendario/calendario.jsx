@@ -46,20 +46,26 @@ const Calendario = () => {
     const fetchData = async () => {
       try {
         const clientesResponse = await axios.get(`${BACKEND_API}api/clientes`);
-        setClientes(clientesResponse.data);
-
         const serviciosResponse = await axios.get(`${BACKEND_API}api/servicios`);
+        const citasResponse = await axios.get(`${BACKEND_API}api/citas`);
+
+        // Guarda los datos de clientes y servicios primero
+        setClientes(clientesResponse.data);
         setServicios(serviciosResponse.data);
 
-        const citasResponse = await axios.get(`${BACKEND_API}api/citas`);
-        const citasData = citasResponse.data.map((cita) => ({
-          id: cita.id_cita,
-          title: `Cita con ${clientes.find((c) => c.id_cliente === cita.id_cliente)?.nombre_cliente}`,
-          start: new Date(`${cita.fecha_cita.split("T")[0]}T${cita.hora_inicio_cita}`),
-          end: new Date(`${cita.fecha_cita.split("T")[0]}T${cita.hora_fin_cita}`),
-          id_cliente: cita.id_cliente,
-          id_servicio: cita.id_servicio,
-        }));
+        // Luego mapea las citas usando los datos de clientes ya cargados
+        const citasData = citasResponse.data.map((cita) => {
+          const cliente = clientesResponse.data.find(c => c.id_cliente === cita.id_cliente);
+          return {
+            id: cita.id_cita,
+            title: `Cita con ${cliente ? cliente.nombre_cliente : 'Cliente desconocido'} ${cliente ? cliente.apellido_cliente : 'Cliente desconocido'}`,
+            start: new Date(`${cita.fecha_cita.split("T")[0]}T${cita.hora_inicio_cita}`),
+            end: new Date(`${cita.fecha_cita.split("T")[0]}T${cita.hora_fin_cita}`),
+            id_cliente: cita.id_cliente,
+            id_servicio: cita.id_servicio,
+          };
+        });
+
         setEvents(citasData);
       } catch (error) {
         console.error("Error al obtener datos:", error);
@@ -68,6 +74,7 @@ const Calendario = () => {
 
     fetchData();
   }, []);
+
 
   const handleSelectSlot = ({ start }) => {
     setSelectedDate(start);
@@ -88,14 +95,14 @@ const Calendario = () => {
       const startDateTime = new Date(selectedDate);
       startDateTime.setHours(parseInt(selectedTime.split(":")[0]));
       startDateTime.setMinutes(parseInt(selectedTime.split(":")[1]));
-
+  
       const endDateTime = new Date(startDateTime);
       endDateTime.setMinutes(endDateTime.getMinutes() + duracionServicio);
-
+  
       const overlapping = events.some((event) => {
         return startDateTime < event.end && endDateTime > event.start;
       });
-
+  
       if (overlapping) {
         toast({
           title: "Hora ocupada",
@@ -106,7 +113,7 @@ const Calendario = () => {
         });
         return;
       }
-
+  
       try {
         await axios.post(`${BACKEND_API}api/cita`, {
           fecha_cita: startDateTime.toISOString().split("T")[0],
@@ -115,6 +122,7 @@ const Calendario = () => {
           id_cliente: selectedCliente,
           id_servicio: selectedServicio,
         });
+  
         toast({
           title: "Cita Agendada",
           description: "La cita se ha agendado correctamente.",
@@ -122,20 +130,22 @@ const Calendario = () => {
           duration: 5000,
           isClosable: true,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 800);
+  
+        const cliente = clientes.find((c) => c.id_cliente === parseInt(selectedCliente));
+        const clienteNombre = cliente ? cliente.nombre_cliente : "Cliente desconocido"; // Manejar el caso donde no se encuentra el cliente
+  
         setEvents((prevEvents) => [
           ...prevEvents,
           {
             id: prevEvents.length + 1,
-            title: `Cita con ${clientes.find((c) => c.id_cliente === parseInt(selectedCliente))?.nombre_cliente}`,
+            title: `Cita con ${clienteNombre}`,
             start: startDateTime,
             end: endDateTime,
             id_cliente: parseInt(selectedCliente),
             id_servicio: parseInt(selectedServicio),
           },
         ]);
+        
         setIsOpen(false);
         setSelectedTime("");
         setIsTimeSelected(false);
@@ -151,7 +161,7 @@ const Calendario = () => {
       }
     }
   };
-
+  
   const handleSelectEvent = (event) => {
     setSelectedEvent(event);
     setEditStartTime(event.start.toTimeString().split(' ')[0]);
