@@ -19,10 +19,16 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-
 dayjs.locale('es');
 
-const Calendario = () => {
+const Calendario = ({
+  defaultView = 'month',
+  defaultDate = new Date(),
+  views = ['month', 'day'],
+  filterDate = null,
+  readonly = false,
+  toolbar = true, // Añade el prop toolbar con valor por defecto
+}) => {
   const localizer = dayjsLocalizer(dayjs);
   const [events, setEvents] = useState([]);
   const [clientes, setClientes] = useState([]);
@@ -42,6 +48,9 @@ const Calendario = () => {
   const [editEndTime, setEditEndTime] = useState("");
   const toast = useToast();
 
+  // Componente personalizado para ocultar la fecha en la agenda
+  const AgendaDate = () => null;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -49,11 +58,9 @@ const Calendario = () => {
         const serviciosResponse = await axios.get(`${BACKEND_API}api/servicios`);
         const citasResponse = await axios.get(`${BACKEND_API}api/citas`);
 
-        // Guarda los datos de clientes y servicios primero
         setClientes(clientesResponse.data);
         setServicios(serviciosResponse.data);
 
-        // Luego mapea las citas usando los datos de clientes ya cargados
         const citasData = citasResponse.data.map((cita) => {
           const cliente = clientesResponse.data.find(c => c.id_cliente === cita.id_cliente);
           return {
@@ -66,17 +73,25 @@ const Calendario = () => {
           };
         });
 
-        setEvents(citasData);
+        // Si se proporciona filterDate, filtrar eventos para esa fecha
+        if (filterDate) {
+          const filteredEvents = citasData.filter(event => 
+            dayjs(event.start).isSame(filterDate, 'day')
+          );
+          setEvents(filteredEvents);
+        } else {
+          setEvents(citasData);
+        }
       } catch (error) {
         console.error("Error al obtener datos:", error);
       }
     };
 
     fetchData();
-  }, []);
-
+  }, [filterDate]);
 
   const handleSelectSlot = ({ start }) => {
+    if (readonly) return;
     setSelectedDate(start);
     setIsOpen(true);
     setIsTimeSelected(false);
@@ -163,6 +178,7 @@ const Calendario = () => {
   };
   
   const handleSelectEvent = (event) => {
+    if (readonly) return;
     setSelectedEvent(event);
     setEditStartTime(event.start.toTimeString().split(' ')[0]);
     setEditService(event.id_servicio);
@@ -189,9 +205,9 @@ const Calendario = () => {
       const servicio = servicios.find((s) => s.id_servicio === parseInt(editService));
       const duracionServicio = servicio ? servicio.duracion_servicio : 0;
       const startDateTime = new Date(selectedEvent.start);
-      const endDateTime = new Date(startDateTime);
       startDateTime.setHours(parseInt(editStartTime.split(":")[0]));
       startDateTime.setMinutes(parseInt(editStartTime.split(":")[1]));
+      const endDateTime = new Date(startDateTime);
       endDateTime.setMinutes(endDateTime.getMinutes() + duracionServicio);
 
       const overlapping = events.some((event) => {
@@ -223,14 +239,11 @@ const Calendario = () => {
         });
         toast({
           title: "Cita Actualizada Correctamente",
-          description: "La cita se ha agendado correctamente.",
+          description: "La cita se ha actualizado correctamente.",
           status: "success",
           duration: 5000,
           isClosable: true,
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 1200);
         setEvents((prevEvents) =>
           prevEvents.map((event) =>
             event.id === selectedEvent.id
@@ -238,9 +251,9 @@ const Calendario = () => {
                   ...event,
                   start: startDateTime,
                   end: endDateTime,
-                  id_cliente: selectedCliente,
-                  id_servicio: selectedServicio,
-                  title: `Cita con ${clientes.find((c) => c.id_cliente === selectedCliente)?.nombre_cliente}`,
+                  id_cliente: editCliente || event.id_cliente,
+                  id_servicio: parseInt(editService),
+                  title: `Cita con ${clientes.find((c) => c.id_cliente === (editCliente ? parseInt(editCliente) : event.id_cliente))?.nombre_cliente || 'Cliente desconocido'}`,
                 }
               : event
           )
@@ -274,8 +287,6 @@ const Calendario = () => {
           duration: 5000,
           isClosable: true,
         });
-        setTimeout(() => {
-        }, 1200);
       } 
       
       catch (error) {
@@ -291,17 +302,25 @@ const Calendario = () => {
   }
 
   return (
-    <div style={{ height: 600 }} className="calendar-container">
+    <div  className="calendar-container">
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: "800px", width:'950px' }}
-        selectable
-        onSelectSlot={handleSelectSlot}
-        onSelectEvent={handleSelectEvent}
-        views={['month', 'day','agenda']}
+        className="calendario-cadafecha"
+        selectable={!readonly}
+        onSelectSlot={readonly ? undefined : handleSelectSlot}
+        onSelectEvent={readonly ? undefined : handleSelectEvent}
+        views={views}
+        defaultView={defaultView}
+        defaultDate={defaultDate}
+        toolbar={toolbar} // Pasa el prop toolbar
+        components={{
+          agenda: {
+            date: AgendaDate, // Reemplaza el componente de fecha con AgendaDate
+          },
+        }}
         messages={{
           allDay: 'Todo el día',
           previous: 'Anterior',
@@ -310,8 +329,7 @@ const Calendario = () => {
           month: 'Mes',
           week: 'Semana',
           day: 'Día',
-          agenda: 'Agenda',
-          date: 'Fecha',
+          date: '',
           time: 'Hora',
           event: 'Evento',
           noEventsInRange: 'No hay eventos en este rango de fechas.',
@@ -319,61 +337,63 @@ const Calendario = () => {
         }}
       />
 
-      {isOpen && (
+      {/* Modales para crear y editar citas solo si no está en modo readonly */}
+      {!readonly && isOpen && (
         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Agendar Cita</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Select
-              placeholder="Seleccione Cliente"
-              onChange={(e) => setSelectedCliente(e.target.value)}
-            >
-              {clientes.map((cliente) => (
-                <option key={cliente.id_cliente} value={cliente.id_cliente}>
-                  {cliente.nombre_cliente} {cliente.apellido_cliente}
-                </option>
-              ))}
-            </Select>
-      
-            <Select
-              placeholder="Seleccione Servicio"
-              onChange={(e) => setSelectedServicio(e.target.value)}
-              mt={4}
-            >
-              {servicios.map((servicio) => (
-                <option key={servicio.id_servicio} value={servicio.id_servicio}>
-                  {servicio.nombre_servicio} - {servicio.duracion_servicio} minutos
-                </option>
-              ))}
-            </Select>
-      
-            <Select
-              placeholder="Seleccione Hora"
-              onChange={handleSelectTime}
-              mt={4}
-            >
-              {timeOptions.map((time) => (
-                <option key={time} value={time}>
-                  {time}
-                </option>
-              ))}
-            </Select>
-          </ModalBody>
-      
-          <ModalFooter>
-            <Button colorScheme="blue" onClick={handleCreateCita}>
-              Guardar Cita
-            </Button>
-            <Button variant="ghost" onClick={() => setIsOpen(false)}>
-              Cancelar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Agendar Cita</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Select
+                placeholder="Seleccione Cliente"
+                onChange={(e) => setSelectedCliente(e.target.value)}
+              >
+                {clientes.map((cliente) => (
+                  <option key={cliente.id_cliente} value={cliente.id_cliente}>
+                    {cliente.nombre_cliente} {cliente.apellido_cliente}
+                  </option>
+                ))}
+              </Select>
+        
+              <Select
+                placeholder="Seleccione Servicio"
+                onChange={(e) => setSelectedServicio(e.target.value)}
+                mt={4}
+              >
+                {servicios.map((servicio) => (
+                  <option key={servicio.id_servicio} value={servicio.id_servicio}>
+                    {servicio.nombre_servicio} - {servicio.duracion_servicio} minutos
+                  </option>
+                ))}
+              </Select>
+        
+              <Select
+                placeholder="Seleccione Hora"
+                onChange={handleSelectTime}
+                mt={4}
+              >
+                {timeOptions.map((time) => (
+                  <option key={time} value={time}>
+                    {time}
+                  </option>
+                ))}
+              </Select>
+            </ModalBody>
+        
+            <ModalFooter>
+              <Button colorScheme="blue" onClick={handleCreateCita}>
+                Guardar Cita
+              </Button>
+              <Button variant="ghost" onClick={() => setIsOpen(false)}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       )}
 
+      {/* Modal para ver detalles de una cita */}
       {isEventModalOpen && selectedEvent && (
         <Modal isOpen={isEventModalOpen} onClose={handleCloseEventModal}>
           <ModalOverlay />
@@ -388,13 +408,13 @@ const Calendario = () => {
                 <strong>Servicio:</strong> {servicios.find((s) => s.id_servicio === selectedEvent.id_servicio)?.nombre_servicio} {servicios.find((s) => s.id_servicio === selectedEvent.id_servicio)?.duracion_servicio}-minutos Q{servicios.find((s) => s.id_servicio === selectedEvent.id_servicio)?.costo_servicio}
               </p>
               <p style={{ color: "black", fontSize: "14px" }}>
-                <strong>Fecha:</strong> {selectedEvent.start.toDateString()}
+                <strong>Fecha:</strong> {dayjs(selectedEvent.start).format('DD/MM/YYYY')}
               </p>
               <p style={{ color: "black", fontSize: "14px" }}>
-                <strong>Hora de Inicio:</strong> {selectedEvent.start.toLocaleTimeString()}
+                <strong>Hora de Inicio:</strong> {dayjs(selectedEvent.start).format('HH:mm')}
               </p>
               <p style={{ color: "black", fontSize: "14px" }}>
-                <strong>Hora de Fin:</strong> {selectedEvent.end.toLocaleTimeString()}
+                <strong>Hora de Fin:</strong> {dayjs(selectedEvent.end).format('HH:mm')}
               </p>
             </ModalBody>
 
@@ -413,95 +433,95 @@ const Calendario = () => {
         </Modal>
       )}
 
-{isEditModalOpen && (
-  <Modal isOpen={isEditModalOpen} onClose={handleCloseEditModal}>
-    <ModalOverlay />
-    <ModalContent>
-      <ModalHeader>Modificar Cita</ModalHeader>
-      <ModalCloseButton />
-      <ModalBody>
-        <Select
-          value={editCliente || selectedEvent.id_cliente} 
-          onChange={(e) => {
-            setEditCliente(e.target.value);
-          }}
-          placeholder="Seleccione Cliente"
-        >
-          {clientes.map((cliente) => (
-            <option key={cliente.id_cliente} value={cliente.id_cliente}>
-              {cliente.nombre_cliente} {cliente.apellido_cliente}
-            </option>
-          ))}
-        </Select>
-
-        <Select
-          value={editService}
-          onChange={(e) => {
-            const selectedService = e.target.value;
-            setEditService(selectedService);
-            const servicio = servicios.find((s) => s.id_servicio === parseInt(selectedService));
-            const duracionServicio = servicio ? servicio.duracion_servicio : 0;
-
-            const newEndTime = new Date(selectedEvent.start);
-            newEndTime.setHours(parseInt(editStartTime.split(":")[0]));
-            newEndTime.setMinutes(parseInt(editStartTime.split(":")[1]));
-            newEndTime.setMinutes(newEndTime.getMinutes() + duracionServicio);
-            setEditEndTime(newEndTime.toTimeString().split(" ")[0]);
-          }}
-          placeholder="Seleccione Servicio"
-          mt={4}
-        >
-          {servicios.map((servicio) => (
-            <option key={servicio.id_servicio} value={servicio.id_servicio}>
-              {servicio.nombre_servicio} - {servicio.duracion_servicio} minutos
-            </option>
-          ))}
-        </Select>
-
-        <Select
-          value={editStartTime|| selectedEvent.hora_inicio_cita} 
-          onChange={(e) => {
-            setEditStartTime(e.target.value);
-            const servicio = servicios.find((s) => s.id_servicio === parseInt(editService));
-            const duracionServicio = servicio ? servicio.duracion_servicio : 0;
-
-            const newStartTime = new Date(selectedEvent.start);
-            newStartTime.setHours(parseInt(e.target.value.split(":")[0]));
-            newStartTime.setMinutes(parseInt(e.target.value.split(":")[1]));
-
-            const newEndTime = new Date(newStartTime);
-            newEndTime.setMinutes(newStartTime.getMinutes() + duracionServicio);
-            setEditEndTime(newEndTime.toTimeString().split(" ")[0]);
-          }}
-          placeholder="Seleccione Hora de Inicio"
-          mt={4}
-        >
-          {timeOptions.map((time) => (
-            <option key={time} value={time}>
-              {time}
-            </option>
-          ))}
-        </Select>
-
-        <p style={{ color: "black", fontSize: "14px" }}>
-          <strong>Hora de Fin:</strong> {editEndTime}
-        </p>
-      </ModalBody>
-
-      <ModalFooter>
-        <Button colorScheme="blue" onClick={handleUpdateCita}>
-          Guardar Cambios
-        </Button>
-        <Button variant="ghost" onClick={handleCloseEditModal}>
-          Cancelar
-        </Button>
-      </ModalFooter>
-    </ModalContent>
-  </Modal>
-)}
-</div>
+      {/* Modal para editar una cita */}
+      {isEditModalOpen && (
+        <Modal isOpen={isEditModalOpen} onClose={handleCloseEditModal}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Modificar Cita</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Select
+                value={editCliente || selectedEvent.id_cliente} 
+                onChange={(e) => {
+                  setEditCliente(e.target.value);
+                }}
+                placeholder="Seleccione Cliente"
+              >
+                {clientes.map((cliente) => (
+                  <option key={cliente.id_cliente} value={cliente.id_cliente}>
+                    {cliente.nombre_cliente} {cliente.apellido_cliente}
+                  </option>
+                ))}
+              </Select>
+      
+              <Select
+                value={editService}
+                onChange={(e) => {
+                  const selectedService = e.target.value;
+                  setEditService(selectedService);
+                  const servicio = servicios.find((s) => s.id_servicio === parseInt(selectedService));
+                  const duracionServicio = servicio ? servicio.duracion_servicio : 0;
+      
+                  const newEndTime = new Date(selectedEvent.start);
+                  newEndTime.setHours(parseInt(editStartTime.split(":")[0]));
+                  newEndTime.setMinutes(parseInt(editStartTime.split(":")[1]));
+                  newEndTime.setMinutes(newEndTime.getMinutes() + duracionServicio);
+                  setEditEndTime(newEndTime.toTimeString().split(" ")[0]);
+                }}
+                placeholder="Seleccione Servicio"
+                mt={4}
+              >
+                {servicios.map((servicio) => (
+                  <option key={servicio.id_servicio} value={servicio.id_servicio}>
+                    {servicio.nombre_servicio} - {servicio.duracion_servicio} minutos
+                  </option>
+                ))}
+              </Select>
+      
+              <Select
+                value={editStartTime || dayjs(selectedEvent.start).format('HH:mm')} 
+                onChange={(e) => {
+                  setEditStartTime(e.target.value);
+                  const servicio = servicios.find((s) => s.id_servicio === parseInt(editService));
+                  const duracionServicio = servicio ? servicio.duracion_servicio : 0;
+      
+                  const newStartTime = new Date(selectedEvent.start);
+                  newStartTime.setHours(parseInt(e.target.value.split(":")[0]));
+                  newStartTime.setMinutes(parseInt(e.target.value.split(":")[1]));
+      
+                  const newEndTime = new Date(newStartTime);
+                  newEndTime.setMinutes(newStartTime.getMinutes() + duracionServicio);
+                  setEditEndTime(newEndTime.toTimeString().split(" ")[0]);
+                }}
+                placeholder="Seleccione Hora de Inicio"
+                mt={4}
+              >
+                {timeOptions.map((time) => (
+                  <option key={time} value={time}>
+                    {time}
+                  </option>
+                ))}
+              </Select>
+      
+              <p style={{ color: "black", fontSize: "14px" }}>
+                <strong>Hora de Fin:</strong> {editEndTime}
+              </p>
+            </ModalBody>
+      
+            <ModalFooter>
+              <Button colorScheme="blue" onClick={handleUpdateCita}>
+                Guardar Cambios
+              </Button>
+              <Button variant="ghost" onClick={handleCloseEditModal}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
+    </div>
   );
 };
 
 export default Calendario;
-
