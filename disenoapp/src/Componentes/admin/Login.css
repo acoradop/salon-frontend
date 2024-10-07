@@ -1,14 +1,4 @@
-/* Estilos generales */
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    display: flex;
-    /*display: block;*/
-    justify-content: center;
-    align-items: center;
-    background-color: #FBF9F1;
-}
+
 
 /* Fondo entre body y div */
 .background {

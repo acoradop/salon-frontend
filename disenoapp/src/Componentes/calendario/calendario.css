@@ -23,5 +23,70 @@
     color: black;
     font-weight: bold;
   }
+
+.calendar-container {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;     /* Centra verticalmente */
+    height: 125vh;           /* Ocupa toda la altura de la ventana */
+    width: 100%;
+}
+
+.rbc-agenda-view table.rbc-agenda-table tbody > tr > td {
+  text-align: left;
+}
+
+.calendario-cadafecha{
+  height: 800px;
+  width: 950px;
+}
  
+
+@media (max-width: 768px) {
+  .calendar-container {
+    margin-top: 10%;
+    display: flex;
+    justify-content:flex-start; /* Centra horizontalmente */
+    align-items:flex-start;     /* Centra verticalmente */
+    height: 100vh;           /* Ocupa toda la altura de la ventana */
+    width: 100%;
+}
+
+  .calendario-cadafecha {
+    font-size: 12px; /* Ajustar el tamaño de fuente */
+    height: 600px;
+    width: 950px;
+  }
+
+  .react-big-calendar {
+    height: 300px; /* Ajustar la altura del calendario */
+  }
+
+  /* Ajustes para modales */
+  .modal-body {
+    padding: 10px; /* Reducir el padding del modal */
+  }
+
+  .rbc-month-view .rbc-month-row {
+    border-bottom: 2px solid #DFC432; 
+  }
+  
+  .rbc-month-view .rbc-day-bg {
+    border-right: 2px solid #DFC432;
+    border-left: 2px solid #DFC432;
+    border-top: 2px solid #DFC432;
+  }
+  
+  .rbc-month-view .rbc-time-slot {
+    border-bottom: 2px solid #DFC432; 
+  }
+  
+  .rbc-month-view .rbc-header {
+    border-bottom: 2px solid #DFC432;
+    border-right: 2px solid #DFC432;
+    border-left: 2px solid #DFC432;
+    border-top: 2px solid #DFC432;
+  }
+}
+
 
