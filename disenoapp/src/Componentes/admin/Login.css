@@ -1,40 +1,62 @@
+/* Estilos Generales */
+h1 {
+    color: #FF6996;
+    font-size: 20px;
+    font-family: Judson, serif;
+    font-weight: 700;
+    text-align: left;
+}
 
+p {
+    color: #FFA8C6;
+    font-size: 12px;
+    font-family: Judson, serif;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+input {
+    font-size: 13px;
+}
 
 /* Fondo entre body y div */
 .background {
-    width: 886px;
-    height: 487px;
-    background: #FBF9F1;
-    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Ocupa todo el alto de la pantalla */
+    background-color: #FBF9F1;
+    padding: 20px;
+    box-sizing: border-box; /* Asegura que el padding no afecte el tamaño total */
 }
 
 /* Contenedor del formulario de login */
 .login-container {
-    position: relative;
-    width: 886px;
-    height: 550px;
-    padding: 20px 10px 10px;
+    width: 100%;
+    max-width: 886px; /* Limita el ancho máximo del contenedor */
+    padding: 20px;
     background: linear-gradient(to bottom, #FFA8C6 25%, #FFA8C6 25%, #FFFFFF 0%);
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    z-index: 2;
-    text-align:center;
+    box-shadow: 0 0 10px rgba(250, 222, 222, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
 }
-
 
 /* Contenedor del logo en forma de esfera */
 .logo-container2 {
-    position: relative;  /* Para que logo-container se posicione dentro de este */
-    width: 200px;        /* Ajusta el ancho para hacer la esfera más grande */
-    height: 200px;       /* Debe ser igual al ancho para mantener la forma circular */
-    border-radius: 50%;  /* Convierte el contenedor en una esfera */
-    background-color: #FFA8C6;  /* Color de fondo visible para logo-container2 */
-    display: flex;       /* Centra logo-container dentro de este contenedor */
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #FFA8C6;
+    display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2;          /* Asegura que esté detrás de logo-container */
-    left: 40%;
-    top: -4%;
+    margin: 0 auto; /* Centra el contenedor */
 }
 
 .logo-container {
@@ -53,96 +75,194 @@
     object-fit: cover;
 }
 
+/* Ajustes generales de alineación */
 .alinear {
-    position: relative;
-    width: 300px; /* Ancho ajustado para mejor visualización */
-    height: auto; /* Alto automático para ajustarse al contenido */
-    text-align: justify; /* Alinea el texto al centro horizontalmente */
-    padding: 20px; /* Espacio interno ajustado */
-    background-color: #FFFFFF; /* Color de fondo para el contenedor */
-    left: 33%;
-    bottom:10%;
-}
-
-h1 {
-    color: #FF4081;
-    font-size: 12px;
-    margin: 0;
-}
-
-p {
-    color: #FF4081;
-    margin: 5px 0 20px;
-    font-size: 10px;
+    width: 100%;
+    max-width: 300px;
+    background-color: #FFFFFF;
+    padding: 20px;
+    margin: 20px auto 0 auto; /* Centra el contenedor y agrega margen superior */
+    box-sizing: border-box;
 }
 
 /* Estilos para el formulario */
 form {
-    width: 100%; /* Asegura que el formulario ocupe todo el ancho del contenedor */
-    display: flex; /* Habilita flexbox en el formulario */
-    flex-direction: column; /* Organiza los elementos en columna */
-    align-items: center; /* Centra los elementos horizontalmente */
-    left: 33%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 /* Estilos generales del contenedor del input */
 .input-container {
-    display: flex;
-    align-items: center;
+    width: 100%;
+    max-width: 280px;
     margin-bottom: 20px;
-    width: 100%; /* Asegura que los campos de input ocupen todo el ancho disponible */
-    max-width: 280px; /* Opcional: Ajusta el ancho máximo del contenedor de entrada */
-}
-
-/* Estilos para la etiqueta (label) */
-.input-label {
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
-}
-
-/* Estilos para la imagen (si se utilizan íconos) */
-.input-label img {
-    width: 30px;
-    height: 30px;
-    padding: 4px;
+    box-sizing: border-box;
 }
 
 /* Estilos para el campo de input */
 .input-field {
-    flex: 1;
+    width: 100%;
     padding: 8px;
     border: 1px solid #d4af37;
     border-radius: 5px;
-    font-size: 16px;
+    text-align: left;
+    font-size: 13px;
     color: #d4af37;
-    text-align: center;
+    box-sizing: border-box;
 }
 
-/* Estilos para el placeholder del input */
-.input-field::placeholder {
+/* Estilos para los placeholders */
+.input-field::placeholder { /* Estándar */
+    color: #d4af37;
+    opacity: 1; /* Asegura que el color se muestre correctamente en Firefox */
+}
+
+.input-field::-webkit-input-placeholder { /* Chrome, Safari, Opera */
     color: #d4af37;
 }
 
-/* Estilos para el input cuando está enfocado */
-.input-field:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+.input-field::-moz-placeholder { /* Firefox 19+ */
+    color: #d4af37;
+    opacity: 1;
+}
+
+.input-field:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #d4af37;
+}
+
+.input-field:-moz-placeholder { /* Firefox 18- */
+    color: #d4af37;
+    opacity: 1;
+}
+
+.input-label {
+    text-align: left;
 }
 
 /* Estilos para el botón */
 .button-login {
     padding: 10px 30px;
     border: none;
-    border-radius: 25px;
+    border-radius: 10px;
     background-color: #FFA8C6;
     color: white;
     font-size: 16px;
     cursor: pointer;
-    margin-top: 20px; /* Espacio superior para separar del contenido */
-    align-self: center; /* Asegura que el botón esté centrado dentro del contenedor */
+    margin-top: 20px;
+    font-family: Judson, serif;
+    width: 215px;
+    margin-bottom: 50px;
+    transition: background-color 0.3s ease;
 }
+
 .button-login:hover {
     background-color: #D83870;
+}
+
+/* Media Queries */
+
+/* Tablets (máximo 768px) */
+@media (max-width: 768px) {
+    .background {
+        padding: 10px;
+    }
+
+    .login-container {
+        max-width: 600px;
+        padding: 15px;
+    }
+
+    .logo-container2 {
+        width: 150px;
+        height: 150px;
+    }
+
+    .logo-container {
+        width: 120px;
+        height: 120px;
+    }
+
+    .alinear {
+        max-width: 250px;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 18px;
+    }
+
+    p {
+        font-size: 11px;
+        margin-bottom: 20px;
+    }
+
+    .input-field {
+        font-size: 14px;
+    }
+
+    .button-login {
+        width: 180px;
+        font-size: 15px;
+    }
+}
+
+/* Teléfonos Móviles (máximo 480px) */
+@media (max-width: 480px) {
+    .login-container {
+        max-width: 100%;
+        padding: 80px;
+        align-items:start !important;
+        justify-content: start  !important;
+        border-radius: 0px;
+        box-shadow: 0px 0px 0px 0px;
+    }
+
+    .logo-container2 {
+        width: 120px;
+        height: 120px;
+    }
+
+    .logo-container {
+        width: 90px;
+        height: 90px;
+    }
+
+    .alinear {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 16px;
+    }
+
+    p {
+        font-size: 10px;
+        margin-bottom: 40px;
+    }
+
+    .input-container {
+        max-width: 100%;
+    }
+
+    .input-field {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .button-login {
+        width: 150px;
+        font-size: 14px;
+        padding: 8px 20px;
+        margin-bottom: 30px;
+        margin-top: 30px;
+    }
+    .background{
+        align-items:flex-start;
+        justify-content:flex-start;
+        padding: 0%;
+        background-color: white;
+    }
 }
