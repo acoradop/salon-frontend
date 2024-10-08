@@ -108,17 +108,14 @@ const Calendario = ({
       const servicio = servicios.find((s) => s.id_servicio === parseInt(selectedServicio));
       const duracionServicio = servicio ? servicio.duracion_servicio : 0;
   
-      // Crear la fecha y hora de inicio en base a la fecha seleccionada
       const startDateTime = new Date(selectedDate);
       startDateTime.setHours(0, 0, 0, 0);
       startDateTime.setHours(parseInt(selectedTime.split(":")[0]));
       startDateTime.setMinutes(parseInt(selectedTime.split(":")[1]));
-  
-      // Crear la fecha y hora de fin en base a la duración del servicio
+
       const endDateTime = new Date(startDateTime);
       endDateTime.setMinutes(endDateTime.getMinutes() + duracionServicio);
   
-      // Comprobar si hay solapamiento de citas
       const overlapping = events.some((event) => {
         return startDateTime < event.end && endDateTime > event.start;
       });
@@ -135,11 +132,10 @@ const Calendario = ({
       }
   
       try {
-        // Enviar fecha y horas en UTC al backend usando toISOString()
         await axios.post(`${BACKEND_API}api/cita`, {
-          fecha_cita: startDateTime.toISOString().split("T")[0], // Enviar la fecha en UTC
-          hora_inicio_cita: startDateTime.toISOString().split("T")[1].split(".")[0], // Enviar la hora de inicio en UTC
-          hora_fin_cita: endDateTime.toISOString().split("T")[1].split(".")[0], // Enviar la hora de fin en UTC
+          fecha_cita: startDateTime.toISOString().split("T")[0], 
+          hora_inicio_cita: startDateTime.toISOString().split("T")[1].split(".")[0],
+          hora_fin_cita: endDateTime.toISOString().split("T")[1].split(".")[0], 
           id_cliente: selectedCliente,
           id_servicio: selectedServicio,
         });
@@ -241,8 +237,8 @@ const Calendario = ({
       try {
         await axios.put(`${BACKEND_API}api/cita/${selectedEvent.id}`, {
           fecha_cita: startDateTime.toISOString().split("T")[0],
-          hora_inicio_cita: startDateTime.toTimeString().split(" ")[0],
-          hora_fin_cita: endDateTime.toTimeString().split(" ")[0],
+          hora_inicio_cita: startDateTime.toISOString().split("T")[1].split(".")[0], 
+          hora_fin_cita: endDateTime.toISOString().split("T")[1].split(".")[0], 
           id_cliente: editCliente || selectedEvent.id_cliente, 
           id_servicio: editService, 
         });
