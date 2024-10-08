@@ -296,7 +296,7 @@ const Calendario = ({
   };
 
   const timeOptions = [];
-  for (let hour = 9; hour < 18; hour++) {
+  for (let hour = 5; hour < 24; hour++) {
     timeOptions.push(`${hour}:00`);
     timeOptions.push(`${hour}:30`);
   }
@@ -315,6 +315,7 @@ const Calendario = ({
         views={views}
         defaultView={defaultView}
         defaultDate={defaultDate}
+        max={new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59)}
         toolbar={toolbar} // Pasa el prop toolbar
         components={{
           agenda: {
