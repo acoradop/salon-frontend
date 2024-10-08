@@ -324,6 +324,7 @@ const Calendario = ({
         messages={{
           allDay: 'Todo el día',
           previous: 'Anterior',
+          today:'Hoy',
           next: 'Siguiente',
           month: 'Mes',
           week: 'Semana',
