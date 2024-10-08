@@ -27,6 +27,8 @@ const Registro = () => {
     fetchClientes();
   }, []);
 
+ 
+
   const handleEliminarCliente = async (id) => {
     try {
       await axios.delete(`${BACKEND_API}api/cliente/${id}`);
@@ -48,48 +50,36 @@ const Registro = () => {
     }
   };
 
+  const validarTexto = (texto) => /^[a-zA-Z\s]+$/.test(texto);
+  const validarTelefono = (telefono) => /^[0-9]+$/.test(telefono);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (errorCliente) {
-      toast.error(errorCliente, {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: "dark",
-      });
+
+    if (!validarTexto(nombre_cliente)) {
+      toast.error('El nombre solo debe contener letras.', { position: "bottom-center", theme: "dark" });
       return;
     }
+
+    if (!validarTexto(apellido_cliente)) {
+      toast.error('El apellido solo debe contener letras.', { position: "bottom-center", theme: "dark" });
+      return;
+    }
+
+    if (!validarTelefono(telefono_cliente)) {
+      toast.error('El teléfono solo debe contener números.', { position: "bottom-center", theme: "dark" });
+      return;
+    }
+
     try {
       await axios.post(`${BACKEND_API}api/cliente`, { nombre_cliente, apellido_cliente, telefono_cliente });
-      toast.success('¡Cliente registrado exitosamente!', {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: "dark",
-      });
+      toast.success('¡Cliente registrado exitosamente!', { position: "bottom-center", theme: "dark" });
       setTimeout(() => {
         window.location.reload();
       }, 500);
     } catch (error) {
       console.error('Error al registrar el cliente:', error);
-      toast.error('¡Error al registrar el cliente!', {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: "dark",
-      });
+      toast.error('¡Error al registrar el cliente!', { position: "bottom-center", theme: "dark" });
     }
   };
 
@@ -104,34 +94,31 @@ const Registro = () => {
   };
 
   const handleModificarCliente = async () => {
+    if (!validarTexto(clienteModificar.nombre_cliente)) {
+      toast.error('El nombre solo debe contener letras.', { position: "bottom-center", theme: "dark" });
+      return;
+    }
+
+    if (!validarTexto(clienteModificar.apellido_cliente)) {
+      toast.error('El apellido solo debe contener letras.', { position: "bottom-center", theme: "dark" });
+      return;
+    }
+
+    if (!validarTelefono(clienteModificar.telefono_cliente)) {
+      toast.error('El teléfono solo debe contener números.', { position: "bottom-center", theme: "dark" });
+      return;
+    }
+
     try {
       await axios.put(`${BACKEND_API}api/actualizar-cliente/${clienteModificar.id_cliente}`, clienteModificar);
-      toast.success('¡Cliente modificado exitosamente!', {
-        position: "bottom-center",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: "dark",
-      });
+      toast.success('¡Cliente modificado exitosamente!', { position: "bottom-center", theme: "dark" });
       setshowMod(false);
       setTimeout(() => {
         window.location.reload();
       }, 800);
     } catch (error) {
       console.error("Error al modificar el cliente:", error);
-      toast.error('¡Error al modificar el cliente!', {
-        position: "bottom-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: "dark",
-      });
+      toast.error('¡Error al modificar el cliente!', { position: "bottom-center", theme: "dark" });
     }
   };
 
@@ -170,16 +157,15 @@ const Registro = () => {
       <div className="form-group-full">
         <label className="label" htmlFor="telefono">Teléfono:</label>
         <div className="input-button-group">
-        <input
-          type="text"
-          id="telefono"
-          className="input small"
-          value={telefono_cliente}
-          name="telefono_cliente"
-          onChange={(e) => setTelefono(e.target.value)}
-        />
-        {errorCliente && <span className="error" style={{ color: "red" }}>{errorCliente}</span>}
-        <button type="submit" onClick={handleSubmit} className="button-client">Guardar Cliente</button>
+          <input
+            type="text"
+            id="telefono"
+            className="input small"
+            value={telefono_cliente}
+            name="telefono_cliente"
+            onChange={(e) => setTelefono(e.target.value)}
+          />
+          <button type="submit" onClick={handleSubmit} className="button-client">Guardar Cliente</button>
         </div>
       </div>
 
