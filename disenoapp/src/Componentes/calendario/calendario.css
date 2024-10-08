@@ -50,11 +50,12 @@
     align-items:flex-start;     /* Centra verticalmente */
     height: 100vh;           /* Ocupa toda la altura de la ventana */
     width: 100%;
+    padding: 0px 20px 0px 20px !important;
 }
 
   .calendario-cadafecha {
     font-size: 12px; /* Ajustar el tamaño de fuente */
-    height: 600px;
+    height: 450px;
     width: 950px;
   }
 
@@ -86,6 +87,30 @@
     border-right: 2px solid #DFC432;
     border-left: 2px solid #DFC432;
     border-top: 2px solid #DFC432;
+  }
+
+  .rbc-agenda-view table.rbc-agenda-table tbody > tr > td{
+    padding: 2px 10px 2px 10px;
+  }
+
+  .rbc-agenda-view table.rbc-agenda-table .rbc-agenda-time-cell {
+    padding: 2px 47px 2px 5px!important;
+  }
+
+  .rbc-toolbar {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    font-size: 10px;
+    justify-content: left;
+  }
+  .rbc-toolbar button {
+    padding: 6px;
+  }
+
+  .rbc-toolbar .rbc-toolbar-label {
+    padding: 0px 0px 0px 0px;
+    width: 50%;
+    flex-grow:0.5;
   }
 }
 
