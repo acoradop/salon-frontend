@@ -7,28 +7,44 @@
 }
 
 .citas-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
+    text-align: left;
     color: #333;
+    padding: 0px 60px -0px 60px;
 }
 
 .calendar-container {
     overflow: hidden;
+    padding: 0px 60px 30px 60px;
 }
 
 /* Ajustes adicionales si es necesario */
 
 .titulo-citas-dia{
     margin-top: 50px;
-    font-size: 25px;
     font-weight: bolder;
+    font-family: Judson;
+    font-style: italic;
+    font-size: 20px;
+    text-align: left;
 }
+
 
 @media (max-width: 768px) {
     .titulo-citas-dia{
         margin-top: 25px;
         font-size: 15px;
         font-weight: bolder;
+    }
+
+    .citas-container h2 {
+        text-align: left;
+        color: #333;
+        padding: 0px 40px -0px 20px;
+    }
+
+    .calendar-container {
+        overflow: hidden;
+        padding: 0px 0px -0px 20px;
     }
     
 }

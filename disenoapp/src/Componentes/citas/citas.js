@@ -9,7 +9,7 @@ const Citas = () => {
 
     return (
         <div className="citas-container">
-            <h2 className='titulo-citas-dia'>Listado de las citas del día</h2>
+            <h2 className='titulo-citas-dia'>Citas del día de hoy</h2>
             <Calendario
                 defaultView='agenda'
                 defaultDate={today}

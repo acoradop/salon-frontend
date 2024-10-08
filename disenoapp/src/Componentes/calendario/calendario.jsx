@@ -325,14 +325,13 @@ const Calendario = ({
           allDay: 'Todo el día',
           previous: 'Anterior',
           next: 'Siguiente',
-          today: 'Hoy',
           month: 'Mes',
           week: 'Semana',
           day: 'Día',
           date: '',
           time: 'Hora',
           event: 'Evento',
-          noEventsInRange: 'No hay eventos en este rango de fechas.',
+          noEventsInRange: 'No hay citas programadas el día de hoy',
           showMore: (total) => `+ Ver más (${total})`,
         }}
       />
